@@ -1,0 +1,18 @@
+---
+- hosts: servers
+  gather_facts: false
+  become: yes
+
+  tasks:
+    #be sudo with ansible
+    - name: be sudo with ansible
+      shell: sudo su -
+
+    - name: create user {{ username }}
+      shell: useradd  -d /home/ubuntu -m {{ username }}
+
+
+    - name: enter passwd ubuntu
+      prompt: "what is your password for ubuntu user"
+      shell: passwd ubuntu
+
