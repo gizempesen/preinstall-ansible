@@ -1,5 +1,7 @@
 ---
 - hosts: servers
+  vars_files:
+    - vars.yaml
   gather_facts: false
   become: yes
 
@@ -8,11 +10,19 @@
     - name: be sudo with ansible
       shell: sudo su -
 
-    - name: create user {{ username }}
-      shell: useradd  -d /home/ubuntu -m {{ username }}
+    #create new user with shell named gizem
+    - name: create new user with shell named gizem
+      user: name={{ username }} shell=/bin/bash state=present
+
+    #add a line to a file with directory
+    - name: add a line to a file with directory
+      lineinfile: dest=/etc/sudoers state=present regexp="^%{{ username }} ALL=(ALL) NOPASSWD: ALL" line="%{{ username }} ALL=(ALL) NOPASSWD: ALL"
+
+    #enter the password for the new user
+    - name: enter the password for the new user
+      shell: echo "{{ password }}" | passwd --stdin {{ username }}
 
 
-    - name: enter passwd ubuntu
-      prompt: "what is your password for ubuntu user"
-      shell: passwd ubuntu
+
+
 
